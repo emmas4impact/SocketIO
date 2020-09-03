@@ -8,16 +8,42 @@ const server = express()
 const httpServer = http.createServer(server)
 const io = socketio(httpServer)
 
+const { saveUserInRoom } = require("./usersUtils")
 io.on("connection", (socket)=>{
     console.log("new connection arrived", socket.id)
     
-    socket.on("join", (options)=>{
+    socket.on("join", async (options)=>{
         console.log("JOINED! ", options)
+        await saveUserInRoom({
+            roomName: options.room,
+            username: options.username,
+            id: socket.id
+        })
+        
+        socket.join(options.room)
+        
+        socket.emit("message", {
+            sender: "Admin",
+            text: "Welcome",
+            createdAt: new Date(),
+        })
+        
+        socket.broadcast.to(options.room).emit("message", {
+            sender: "Admin",
+            text: `${options.username} joined the channel!`,
+            createdAt: new Date(),
+        })
+        
+        const list = []
+        
+        io.to(options.room).emit("roomData", {room: options.room, members: list})
     })
     
     socket.on("leave", ()=>{})
     
-    socket.on("message", ()=>{})
+    socket.on("sendMessage", async()=>{
+        
+    })
 })
 
 const port = process.env.PORT || 3002
