@@ -53,26 +53,29 @@ const saveUserInRoom = async ({roomName, username , id} )=>{
 //     }
 //   }
   
-//   const getUser = async (roomName, id) => {
-//     try {
-//       const room = await RoomModel.findOne({ name: roomName })
-//       const user = room.members.find((member) => member.id === id)
+  const getUser = async (roomName, id) => {
+    try {
+      const room = await RoomModel.findOne({ name: roomName })
+      const user = room.members.find((member) => member.id === id)
   
-//       return user
-//     } catch (error) {
-//       console.log(error)
-//     }
-//   }
+      return user
+    } catch (error) {
+      console.log(error)
+    }
+  }
   
-//   const getUsersInRoom = async (roomName) => {
-//     const room = await RoomModel.findOne({ name: roomName })
-//     if(room)
-//         return room.members
-//     else 
-//         throw new Error("Cannot find room " + roomName)
-//   }
+  const getUsersInRoom = async (roomName) => {
+    const room = await RoomModel.findOne({ name: roomName })
+    if(room)
+        return room.members
+    else 
+        throw new Error("Cannot find room " + roomName)
+  }
   
   module.exports = {
     saveUserInRoom,
+    getUser,
+    getUsersInRoom
+    
    
   }
