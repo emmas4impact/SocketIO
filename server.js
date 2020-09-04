@@ -2,13 +2,13 @@ const express = require("express")
 const http = require("http")
 const socketio = require("socket.io")
 const mongoose = require("mongoose")
-const { Socket } = require("dgram")
+
 
 const server = express()
 const httpServer = http.createServer(server)
 const io = socketio(httpServer)
 
-const { saveUserInRoom } = require("./usersUtils")
+const { saveUserInRoom, getUser, getUsersInRoom } = require("./usersUtils")
 io.on("connection", (socket)=>{
     console.log("new connection arrived", socket.id)
     
@@ -41,7 +41,13 @@ io.on("connection", (socket)=>{
     
     socket.on("leave", ()=>{})
     
-    socket.on("sendMessage", async()=>{
+    socket.on("sendMessage", async({room, text})=>{
+        
+        const message ={
+            sender: "Admin",
+            text: `${options.username} joined the channel!`,
+            createdAt: new Date(),
+        }
         
     })
 })
